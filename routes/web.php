@@ -19,9 +19,7 @@ Route::get('/', function () {
 
 Auth::routes();
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function(){
-    Route::get('dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('dashboard', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
     Route::resource('pricing-plan', 'App\Http\Controllers\PricingPlanController')->names('pricing_plan');
     Route::get('pricing-plan/change-status/{id}', [App\Http\Controllers\PricingPlanController::class,'change_status'])->name('pricing_plan.change_status');
     Route::resource('features', 'App\Http\Controllers\FeatureController')->names('features');

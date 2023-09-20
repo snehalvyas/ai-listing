@@ -18,8 +18,50 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware('auth:api')->post('logout', [UserController::class, 'logout']);
 Route::post('login', [UserController::class, 'login']);
-Route::post('register', [UserController::class, 'register']);
+Route::post('sign-up', [UserController::class, 'register']);
+
+Route::resource('multi_search', '\App\Http\Controllers\Api\CategoriesController');
+Route::get('categories', [\App\Http\Controllers\Api\CategoriesController::class, 'get']);
+Route::get('allCat', [\App\Http\Controllers\Api\CategoriesController::class, 'allCat']);
+Route::get('getTodayData', [\App\Http\Controllers\Api\NewsController::class, 'getTodayData']);
+Route::get('random-tool', [\App\Http\Controllers\Api\AiToolsController::class, 'random']);
+
+Route::resource('ai-tools','\App\Http\Controllers\Api\AiToolsController',[
+    'only' => [
+        'index',
+        'show',
+        'create',
+    ]
+])->names('ai_tools');
+
+Route::resource('ai-tools','\App\Http\Controllers\Api\AiToolsController',[
+    'except' => [
+        'index',
+        'show',
+        'create',
+    ]
+])->middleware([ 'auth:api'])->names('ai_tools');
+Route::resource('news','\App\Http\Controllers\Api\NewsController',[
+    'only' => [
+        'index',
+        'show',
+        'create',
+    ]
+])->names('news');
+Route::resource('news','\App\Http\Controllers\Api\NewsController',[
+    'except' => [
+        'index',
+        'show',
+        'create',
+    ]
+])->middleware([ 'auth:api'])->names('news');
+
+Route::resource('review','\App\Http\Controllers\Api\AitoolReviewController')->middleware([ 'auth:api'])->names('review');
+Route::post('reviewLikeDislike', [\App\Http\Controllers\Api\AitoolReviewController::class, 'reviewLikeDislike'])->middleware([ 'auth:api']);
+Route::resource('ai-tools-favourite','\App\Http\Controllers\Api\AitoolFavouriteController')->middleware([ 'auth:api'])->names('tool_fav');
+Route::resource('news-favourite','\App\Http\Controllers\Api\NewsFavouriteController')->middleware([ 'auth:api'])->names('news_fav');
 //Route::group(['middleware' => 'auth:api'], function(){
 //    Route::post('user-details', [UserController::class, 'userDetails']);
 //});

@@ -39,7 +39,7 @@ class AiToolsController extends Controller
     public function store(Request $request,AiTools $aiTools)
     {
         $validated = $request->validate([
-            'tool_name' => 'required|max:255',
+            'tool_name' => 'required|unique:ai_tools|max:255',
             'website_url' => 'required|url',
             'tool_description' => '',
             'short_description' => '',
@@ -94,9 +94,9 @@ class AiToolsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(AiTools $aiTools)
+    public function show(AiTools $aiTool)
     {
-        //
+        return view('admin.ai_tools.show',compact('aiTool'));
     }
 
     /**
@@ -117,7 +117,7 @@ class AiToolsController extends Controller
     {
         $aiTools= $aiTool;
         $validated = $request->validate([
-            'tool_name' => 'required|max:255',
+            'tool_name' => 'required|max:255|unique:ai_tools,tool_name,'.$aiTools->id,
             'website_url' => 'required|url',
             'tool_description' => '',
             'short_description' => '',

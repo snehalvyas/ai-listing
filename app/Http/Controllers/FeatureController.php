@@ -30,7 +30,7 @@ class FeatureController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'feature' => 'required|max:255',
+            'feature' => 'required|max:255|unique:features',
             'icon' => 'required',
         ]);
         $feature = new Feature();
@@ -62,7 +62,7 @@ class FeatureController extends Controller
     public function update(Request $request, Feature $feature)
     {
         $validated = $request->validate([
-            'feature' => 'required|max:255',
+            'feature' => 'required|max:255|unique:features,feature,'.$feature->id,
             'icon' => 'required',
         ]);
         $feature->feature=$request->feature;

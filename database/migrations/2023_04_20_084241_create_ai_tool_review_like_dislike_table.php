@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('review_id')->references('id')->on('ai_tool_reviews')->onDelete('cascade');
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->binary('like')->default(false);
-            $table->binary('dislike')->default(false);
+            $table->boolean('like')->default(false);
+//            $table->binary('dislike')->default(false);
             $table->timestamps();
         });
     }

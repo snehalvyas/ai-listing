@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('twitter_url')->nullable();
             $table->string('youtube_url')->nullable();
             $table->string('email_link',100)->nullable();
-            $table->integer('total_views')->nullable(true);
+            $table->integer('total_views')->default(0);
             $table->string('video_review')->nullable(true);
             $table->string('starting_price',100)->nullable();
             $table->boolean('associated_with_product')->default(false);

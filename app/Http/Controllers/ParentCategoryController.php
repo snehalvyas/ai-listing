@@ -30,7 +30,7 @@ class ParentCategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'parent_category' => 'required|max:255',
+            'parent_category' => 'required|unique:parent_categories|max:255',
         ]);
         $parentCategory = new ParentCategory();
         $parentCategory->parent_category=$request->parent_category;
@@ -62,7 +62,7 @@ class ParentCategoryController extends Controller
     public function update(Request $request, ParentCategory $parentCategory)
     {
         $validated = $request->validate([
-            'parent_category' => 'required|max:255',
+            'parent_category' => 'required|max:255|unique:parent_categories,parent_category,'.$parentCategory->id,
         ]);
         $parentCategory->parent_category=$request->parent_category;
         $parentCategory->status=($request->status==1?1:0);

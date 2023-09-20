@@ -19,19 +19,29 @@ class UserController extends Controller
      */
     public function index(){
         $users= User::where('role','!=','admin')->paginate(10);
+
         return view('admin.users.index',compact('users'));
     }
     public function login(){
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
             $user = Auth::user();
-            $success['token'] =  $user->createToken('MyLaravelApp')-> accessToken;
+            $success['token'] =  $user->createToken('MyApp')->accessToken;
             $success['userId'] = $user->id;
-            return response()->json(['success' => $success], $this-> successStatus);
+            $success['email'] = $user->email;
+            $success['username'] = $user->first_name.' '.$user->last_name;
+            return response()->json(['success' => $success], $this->successStatus);
         }
         else{
             return response()->json(['error'=>'Unauthorised'], 401);
         }
     }
+    public function logout(){
+        $user = Auth::user()->token();
+        $user->revoke();
+        return response()->json([
+            'success'=>true,
+            'message' => 'Successfully logged out'
+        ]);    }
 
     /**
      * Register api
@@ -44,6 +54,7 @@ class UserController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email|unique:users',
+            'mobile_no' => 'required|numeric|unique:users',
             'password' => 'required',
             'c_password' => 'required|same:password',
         ]);
@@ -54,9 +65,9 @@ class UserController extends Controller
         $input['password'] = Hash::make($input['password']);
         $input['role'] = 'admin';
         $user = User::create($input);
-        $success['token'] =  $user->createToken('MyLaravelApp')-> accessToken;
+        $success['token'] =  $user->createToken('MyApp')->accessToken;
         $success['name'] =  $user->name;
-        return response()->json(['success'=>$success], $this-> successStatus);
+        return response()->json(['success'=>$success], $this->successStatus);
     }
 
     /**
@@ -114,6 +125,9 @@ class UserController extends Controller
             $user->save();
             return back()->with('success','Password changed successfully.');;
         }
+
+    }
+    public function edit(Request $request,$id){
 
     }
 }

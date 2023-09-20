@@ -31,7 +31,7 @@ class PricingPlanController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'plan' => 'required|max:255',
+            'plan' => 'required|max:255|unique:pricing_plan',
             'icon' => 'required',
         ]);
         $PricingPlan = new PricingPlan();
@@ -63,7 +63,7 @@ class PricingPlanController extends Controller
     public function update(Request $request,PricingPlan $pricingPlan)
     {
         $validated = $request->validate([
-            'plan' => 'required|max:255',
+            'plan' => 'required|max:255|unique:pricing_plan,plan,'.$pricingPlan->id,
             'icon' => 'required',
         ]);
         $pricingPlan->plan=$request->plan;

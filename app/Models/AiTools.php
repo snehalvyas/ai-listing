@@ -31,18 +31,22 @@ class AiTools extends Model
         'updated_by',
         'status',
     ];
-    public function setTitleAttribute($value)
+    public function setToolNameAttribute($value)
     {
-        $this->attributes['title'] = $value;
-        $this->attributes['slug'] = str_slug($value);
+        $this->attributes['tool_name'] = $value;
+        $this->attributes['slug'] = \Str::slug($value);
     }
-    protected static function boot() {
-        parent::boot();
-
-        static::creating(function ($question) {
-            $question->slug = \Str::slug($question->tool_name);
-        });
+    public function getCreatedAtAttribute($value)
+    {
+        return date('M d Y',strtotime($value));
     }
+//    protected static function boot() {
+//        parent::boot();
+//
+//        static::creating(function ($question) {
+//            $question->slug = \Str::slug($question->tool_name);
+//        });
+//    }
     public function categories(){
         return $this->hasMany(AiToolCategories::class, 'ai_tool_id', 'id');
     }
@@ -51,5 +55,26 @@ class AiTools extends Model
     }
     public function pricingPlans(){
         return $this->hasMany(AiToolPricingPlan::class, 'ai_tool_id', 'id');
+    }
+    public function favourites(){
+        return $this->hasMany(AiToolsUserFavourites::class, 'ai_tool_id', 'id')->where('user_id',auth()->id());
+    }
+    public function allUserfavourites(){
+        return $this->hasMany(AiToolsUserFavourites::class, 'ai_tool_id', 'id');
+    }
+    public function myReview(){
+        return $this->hasOne(AiToolReviews::class, 'ai_tool_id', 'id')->where('user_id',auth()->id());
+    }
+    public function review(){
+        return $this->hasMany(AiToolReviews::class, 'ai_tool_id', 'id')->orderBy('id','Desc');
+    }
+    public function reviewRows()
+    {
+        return $this->hasManyThrough('ReviewRow', 'Review');
+    }
+    public function avgRating(){
+        return $this->review()
+            ->selectRaw('round(avg(star)) as rating, ai_tool_id')
+            ->groupBy('ai_tool_id');
     }
 }

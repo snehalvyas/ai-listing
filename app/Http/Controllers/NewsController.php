@@ -14,7 +14,7 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $news = News::orderBy('id','DESC')->paginate(1);
+        $news = News::orderBy('id','DESC')->paginate(10);
         return view('admin.news.index',compact('news'));
     }
 
@@ -33,7 +33,7 @@ class NewsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|max:255',
+            'title' => 'required|max:255|unique:news',
             'content_link' => 'required',
 //            'categories' => 'required',
             'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
@@ -84,7 +84,7 @@ class NewsController extends Controller
     public function update(Request $request, News $news)
     {
         $validated = $request->validate([
-            'title' => 'required|max:255',
+            'title' => 'required|max:255|unique:news,title,'.$news->id,
             'content_link' => 'required',
 //            'categories' => 'required',
             'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',

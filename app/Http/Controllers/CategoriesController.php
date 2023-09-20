@@ -32,12 +32,13 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'category' => 'required|max:255',
+            'category' => 'required|max:255|unique:categories',
             'parent_id' => 'required|numeric',
         ]);
         $categories = new Categories();
         $categories->parent_id=$request->parent_id;
         $categories->category=$request->category;
+        $categories->icon=$request->icon;
         $categories->status=($request->status==1?1:0);
         $categories->save();
         return to_route('admin.categories.index')->with('success','Created successfully.');
@@ -68,12 +69,13 @@ class CategoriesController extends Controller
     {
 
         $validated = $request->validate([
-            'category' => 'required|max:255',
+            'category' => 'required|max:255|unique:categories,category,'.$id,
             'parent_id' => 'required|numeric',
         ]);
         $categories = Categories::find($id);
         $categories->parent_id=$request->parent_id;
         $categories->category=$request->category;
+        $categories->icon=$request->icon;
         $categories->status=($request->status==1?1:0);
         $categories->update();
         return to_route('admin.categories.index')->with('success','Updated successfully.');
@@ -94,5 +96,8 @@ class CategoriesController extends Controller
         $categories->status = ($categories->status==0?1:0);
         $categories->update();
         return response()->json(['success'=>1,'msg'=>'Status changed successfully.']);
+    }
+    public function get(){
+        return Categories::select('id as value','category as label','icon')->where('status',1)->get();
     }
 }

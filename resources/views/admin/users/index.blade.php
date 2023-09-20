@@ -40,6 +40,7 @@
                                     <th>#</th>
                                     <th>Name</th>
                                     <th>Email</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -48,6 +49,7 @@
                                 <tr>
                                     <td>{{ $loop->index+1 }}</td>
                                     <td>{{$user->first_name}} {{$user->last_name}}</td>
+                                    <td>{{$user->email}}</td>
                                     <td>
                                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                                             <input type="checkbox" class="custom-control-input status" {{$user->status==1?'checked':''}} data-id="{{$user->id}}" data-url="{{route('admin.users.change_status',$user->id)}}" id="customSwitch{{$loop->index}}">

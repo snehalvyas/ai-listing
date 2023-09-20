@@ -29,6 +29,10 @@ class PageController extends Controller
      */
     public function store(Request $request,Page $page)
     {
+        $validated = $request->validate([
+            'page_name' => 'required|max:255|unique:pages',
+            'description' => 'required',
+        ]);
         $this->save($request,$page);
         return to_route('admin.pages.index')->with('success','Created successfully.');
     }
@@ -54,6 +58,10 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page)
     {
+        $validated = $request->validate([
+            'page_name' => 'required|max:255|unique:pages,page_name,'.$page->id,
+            'description' => 'required',
+        ]);
         $this->save($request,$page);
         return to_route('admin.pages.index')->with('success','Updated successfully.');
     }

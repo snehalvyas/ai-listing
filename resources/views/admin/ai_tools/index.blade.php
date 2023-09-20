@@ -40,6 +40,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Tool</th>
+                                    <th>Created at</th>
                                     <th>Approved</th>
                                     <th>Action</th>
                                 </tr>
@@ -49,6 +50,7 @@
                                 <tr>
                                     <td>{{ $loop->index+1 }}</td>
                                     <td>{{$tool->tool_name}}</td>
+                                    <td>{{$tool->created_at}}</td>
                                     <td>
                                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                                             <input type="checkbox" class="custom-control-input status" {{$tool->status==1?'checked':''}} data-id="{{$tool->id}}" data-url="{{route('admin.ai_tools.change_status',$tool->id)}}" id="customSwitch{{$loop->index}}">
@@ -58,11 +60,16 @@
                                     <td>
                                         <form method="post" action="{{route('admin.ai_tools.destroy',$tool->id)}}">
                                             @csrf
-                                        <a class="btn btn-info btn-sm" href="{{route('admin.ai_tools.edit',$tool->id)}}">
-                                            <i class="fas fa-pencil-alt">
+                                        <a class="btn btn-warning btn-sm" href="{{route('admin.ai_tools.show',$tool->id)}}">
+                                            <i class="fas fa-eye">
                                             </i>
-                                            Edit
+                                            View
                                         </a>
+                                            <a class="btn btn-info btn-sm" href="{{route('admin.ai_tools.edit',$tool->id)}}">
+                                                <i class="fas fa-pencil-alt">
+                                                </i>
+                                                Edit
+                                            </a>
 
                                             @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Do you want to delete?')" href="{{route('admin.ai_tools.destroy',$tool->id)}}">

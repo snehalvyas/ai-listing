@@ -41,7 +41,7 @@
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Plan <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="plan" id="plan" value="{{ (isset($pricingPlan)?$pricingPlan->plan:old('plan')) }}" placeholder="Plan" @error('plan') is-invalid @enderror required>
-                                    @error('paln')
+                                    @error('plan')
                                     <span class="text text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>

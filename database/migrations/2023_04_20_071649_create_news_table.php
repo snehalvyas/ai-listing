@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('content_link');
-            $table->text('description')->nullable();
+            $table->text('description')->nullable(true);
             $table->string('image')->nullable();
             $table->boolean('is_featured')->default(false);
             $table->boolean('status')->default(false);
+            $table->integer('total_views')->default(0);
             $table->timestamps();
         });
     }

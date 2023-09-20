@@ -32,4 +32,17 @@ class News extends Model
    public function categories(){
        return $this->hasMany(NewsCategories::class, 'news_id', 'id');
    }
+    public function userFavourites(){
+        return $this->hasMany(NewsUserFavourite::class, 'news_id', 'id')->where('user_id',auth()->id());
+    }
+    public function allUserfavourites(){
+        return $this->hasMany(NewsUserFavourite::class, 'news_id', 'id');
+    }
+    public function addedBy(){
+    return $this->hasOne(User::class,'id','created_by');
+    }
+    public function getFullImageAttribute()
+    {
+        return \Storage::url('uploads/news/'.$this->image);
+    }
 }

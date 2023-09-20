@@ -26,11 +26,11 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">List</h3>
-                            <a class="btn btn-info btn-sm float-right" href="{{route('admin.contactus.create')}}">
-                                <i class="fas fa-plus">
-                                </i>
-                                New
-                            </a>
+{{--                            <a class="btn btn-info btn-sm float-right" href="{{route('admin.contactus.create')}}">--}}
+{{--                                <i class="fas fa-plus">--}}
+{{--                                </i>--}}
+{{--                                New--}}
+{{--                            </a>--}}
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">

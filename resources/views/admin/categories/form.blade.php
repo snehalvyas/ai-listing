@@ -60,6 +60,21 @@
                                     @enderror
                                 </div>
                                 <div class="form-group">
+                                    <label for="exampleInputPassword1">Icon <span class="text-danger">*</span></label>
+                                    @php
+                                        $icons =getIcons();
+                                    @endphp
+                                    @foreach($icons as $k=>$i)
+                                        <div class="custom-control custom-radio">
+                                            <input {{ (isset($categories)&&$categories->icon==$i?'checked':'') }} class="custom-control-input custom-control-input-danger" value="{{$i}}" type="radio" id="customRadio{{$k}}" name="icon" required>
+                                            <label for="customRadio{{$k}}" class="custom-control-label"><i class="{{$i}}" ></i>  {{$i}}</label>
+                                        </div>
+                                    @endforeach
+                                    @error('icon')
+                                    <span class="text text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
                                     <label for="exampleInputEmail1">Status</label>
                                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success  ">
                                         <input type="checkbox" name="status" class="custom-control-input " {{isset($categories)&&$categories->status==1?'checked':''}}  id="customSwitch" value="1">

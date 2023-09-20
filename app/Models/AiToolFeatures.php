@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class AiToolFeatures extends Model
 {
     use HasFactory;
+    public function featureMaster(){
+        return $this->hasOne(Feature::class, 'id', 'feature_id');
+    }
 }

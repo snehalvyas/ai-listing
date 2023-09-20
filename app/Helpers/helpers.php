@@ -48,6 +48,16 @@ if (! function_exists('getIcons')) {
             'fa fa-check-circle',
             'fa fa-save',
             'fa fa-lock',
+            'fa fa-learn',
+            'fa fa-search',
+            'fab fa-research',
+            'fas fa-calculator',
+            'fas fa-camera-retro',
+            'far fa-check-circle',
+            'fas fa-desktop',
+            'fab fa-github',
+            'fab fa-instagram',
+            'fa fa-video',
             'extension',
         ];
     }

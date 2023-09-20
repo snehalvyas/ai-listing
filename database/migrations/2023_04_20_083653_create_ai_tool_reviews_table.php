@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ai_tool_id')->references('id')->on('ai_tools')->onDelete('cascade');
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->tinyInteger('start')->nullable();
+            $table->tinyInteger('star')->nullable();
             $table->text('review')->nullable();
             $table->timestamps();
         });
