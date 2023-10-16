@@ -15,9 +15,10 @@ class ToolSeeder extends Seeder
     public function run(): void
     {
         foreach (range(1, 100) as $index) {
-
+            $value=Str::random(10);
             DB::table('ai_tools')->insert([
-                'tool_name' => Str::random(10),
+                'tool_name' =>$value,
+                'slug' => Str::slug($value),
                 'short_description' => Str::random(100),
                 'tool_description' => "<p>A versatile video creation wizard, effortlessly automating scripting, editing, and publishing while transforming text, voice, and photos into vibrant videos, with access to expansive media libraries and the power to convert audio files into dynamic content.</p>",
                 'starting_price' => 'starts from $20/mo',
