@@ -85,11 +85,23 @@ class NewsFavouriteController extends Controller
                     $userfave->user_id = auth()->id();
                     $userfave->news_id = $news->id;
                     $userfave->save();
-                    return ['success' => true, 'msg' => "Saved to favourites","status"=>1];
+                    $response=['success' => true, 'msg' => "Saved to favourites","status"=>1];
                 } else {
                     $this->destroy($AiNewsFav->id);
-                    return ['success' => true, 'msg' => "Removed from favourites","status"=>0];
+                    $response= ['success' => true, 'msg' => "Removed from favourites","status"=>0];
                 }
+                $data = News::select('id','content_link','description','is_featured','title','created_by','created_at as date',\DB::raw("CONCAT('".url('storage/uploads/news/')."','/',image) AS image"))->where('news.status',1)
+                    ->withCount(['userFavourites','allUserfavourites'])->with(['userFavourites','allUserfavourites'])
+                    ->with(['addedBy' => function ($query) {
+                        $query->select('id','role');
+                    }])->with(['categories'=>function ($q) {
+                        return $q->select('category_id', 'news_id')->with(['newsCategories' => function ($q) {
+                            return $q->select('id', 'category', 'icon');
+                        }]);
+
+                    }])->where('id',$news->id)->first();
+                $response['data']=$data;
+                return $response;
             }
         }
         return ['success' => false, 'msg' => "News not found"];

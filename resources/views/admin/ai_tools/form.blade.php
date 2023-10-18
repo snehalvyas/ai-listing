@@ -303,7 +303,7 @@
                                     <div class="col-md-3">
 
                                             <div class="form-group">
-                                                <img src="{{\Storage::url('uploads/ai_tools/'.$aiTool->image)}}" class="img-lg img-thumbnail " >
+                                                <img src="{{asset(\Storage::url('uploads/ai_tools/'.$aiTool->image))}}" class="img-lg img-thumbnail " >
                                             </div>
                                     </div>
                                     @endif

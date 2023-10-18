@@ -28,6 +28,8 @@ class AiToolsController extends Controller
         $tool= $request->tool;
         $pricing= $request->pricing;
         $feature= $request->feature;
+        $perPage= $request->perPage??12;
+
 //dd($request->get('pricing'));
         $data =AiTools::select('id','tool_name','short_description','starting_price','website_url','verified','slug',\DB::raw("CONCAT('".url('storage/uploads/ai_tools/')."','/',image) AS image"))
             ->withCount(['categories','features','review','pricingPlans','allUserfavourites'])
@@ -97,7 +99,7 @@ class AiToolsController extends Controller
                 }
             })
             ->where('status',1)->orderBy(($sort=='popular'?'total_views':'id'),'DESC')
-            ->paginate(12);
+            ->paginate($perPage);
         return response()->json($data, $this->successStatus);
     }
 

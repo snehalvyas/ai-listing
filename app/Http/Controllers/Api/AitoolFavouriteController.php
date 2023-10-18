@@ -22,6 +22,7 @@ class AitoolFavouriteController extends Controller
     {
         $type= $request->type;
         $value= $request->value;
+        $perPage= $request->perPage??12;
 
         $data =AiTools::select('id','tool_name','short_description','starting_price','website_url','verified','slug',\DB::raw("CONCAT('".url('storage/uploads/ai_tools/')."','/',image) AS image"))
             ->withCount(['categories','features','review','pricingPlans','favourites','allUserfavourites'])
@@ -70,7 +71,7 @@ class AitoolFavouriteController extends Controller
                 }
             })
             ->orderBy('id','DESC')
-            ->paginate(100);
+            ->paginate($perPage);
         return response()->json($data, $this->successStatus);
     }
 
@@ -91,6 +92,17 @@ class AitoolFavouriteController extends Controller
             $aiTool = AiTools::select('id')->where('slug', $request->post('slug'))->first();
             if ($aiTool) {
                 $AiToolFav = AiToolsUserFavourites::where('user_id', auth()->id())->where('ai_tool_id', $aiTool->id)->first();
+
+                if (!$AiToolFav) {
+                    $userfave = new AiToolsUserFavourites();
+                    $userfave->user_id = auth()->id();
+                    $userfave->ai_tool_id = $aiTool->id;
+                    $userfave->save();
+                    $response= ['success' => true, 'msg' => "Saved to favourites","status"=>1];
+                } else {
+                    $this->destroy($AiToolFav->id);
+                    $response= ['success' => true, 'msg' => "Removed from favourites","status"=>0];
+                }
                 $aiTool =AiTools::select('id','tool_name','short_description','starting_price','website_url','verified','slug',\DB::raw("CONCAT('".url('storage/uploads/ai_tools/')."','/',image) AS image"))
                     ->withCount(['categories','features','review','pricingPlans','allUserfavourites'])
                     ->with('allUserfavourites',function($q){
@@ -112,16 +124,9 @@ class AitoolFavouriteController extends Controller
                     })
                     ->with('avgRating')
                     ->where('id',$aiTool->id)->first();
-                if (!$AiToolFav) {
-                    $userfave = new AiToolsUserFavourites();
-                    $userfave->user_id = auth()->id();
-                    $userfave->ai_tool_id = $aiTool->id;
-                    $userfave->save();
-                    return ['success' => true, 'msg' => "Saved to favourites","status"=>1,'data'=>$aiTool];
-                } else {
-                    $this->destroy($AiToolFav->id);
-                    return ['success' => true, 'msg' => "Removed from favourites","status"=>0,'data'=>$aiTool];
-                }
+                 $response['data']=$aiTool;
+                return $response;
+
             }
         }
         return ['success' => false, 'msg' => "Tool not found"];

@@ -83,21 +83,23 @@
                                         {{--                                            <span class="input-group-text">Upload</span>--}}
                                         {{--                                        </div>--}}
                                     </div>
-                                </div>
-                                @if(isset($news)&&$news->image!='')
-                                    <div class="form-group">
-                                        <img src="{{\Storage::url('uploads/news/'.$news->image)}}" class="img-lg img-thumbnail ">
-                                    </div>
-                                @endif
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Featured</label>
-                                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success  ">
-                                        <input type="checkbox" name="is_featured" class="custom-control-input " {{isset($news)&&$news->is_featured==1?'checked':''}}  id="is_featured" value="1">
-                                        <label class="custom-control-label" for="is_featured"></label>
-                                    </div>
+                                    @if(isset($news)&&$news->image!='')
+                                        <div class="form-group">
+                                            <img src="{{asset(\Storage::url('uploads/news/'.$news->image))}}" class="img-lg img-thumbnail ">
+                                        </div>
+                                    @endif
                                 </div>
 
+
                             </div>
+                            <div class="col-12">
+                                <label for="exampleInputEmail1">Featured</label>
+                                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success  ">
+                                    <input type="checkbox" name="is_featured" class="custom-control-input " {{isset($news)&&$news->is_featured==1?'checked':''}}  id="is_featured" value="1">
+                                    <label class="custom-control-label" for="is_featured"></label>
+                                </div>
+                            </div>
+
                             <!-- /.card-body -->
 
                             <div class="card-footer">
