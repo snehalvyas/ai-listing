@@ -23,7 +23,7 @@ class UserController extends Controller
         return view('admin.users.index',compact('users'));
     }
     public function login(){
-        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
+        if(Auth::attempt(['email' => request('email'), 'password' => request('password'),'role'=>'user','status'=>1])){
             $user = Auth::user();
             $success['token'] =  $user->createToken('MyApp')->accessToken;
             $success['userId'] = $user->id;
@@ -57,16 +57,22 @@ class UserController extends Controller
             'mobile_no' => 'required|numeric|unique:users',
             'password' => 'required',
             'c_password' => 'required|same:password',
-        ]);
+        ],
+            [
+                'c_password.required' => "The confirm password field must match password.",
+                'c_password.same' => "The confirm password field must match password.",
+                ]
+        );
         if ($validator->fails()) {
             return response()->json(['error'=>$validator->errors()], 401);
         }
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
-        $input['role'] = 'admin';
+        $input['role'] = 'user';
+        $input['status'] = 1;
         $user = User::create($input);
         $success['token'] =  $user->createToken('MyApp')->accessToken;
-        $success['name'] =  $user->name;
+        $success['name'] =  $user->firts_name;
         return response()->json(['success'=>$success], $this->successStatus);
     }
 

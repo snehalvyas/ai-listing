@@ -10,16 +10,9 @@ use App\Models\News;
 use App\Models\NewsCategories;
 use App\Models\PricingPlan;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\App;
-use Laravel\Passport\PassportUserProvider;
 use Validator;
 
 use Illuminate\Http\Request;
-use League\OAuth2\Server\ResourceServer;
-use Laravel\Passport\TokenRepository;
-use Laravel\Passport\Guards\TokenGuard;
-use Laravel\Passport\ClientRepository;
-use Illuminate\Support\Facades\Auth;
 
 class NewsController extends Controller
 {
@@ -47,15 +40,9 @@ class NewsController extends Controller
         }
 
 
-        $user = $this->getUser($request->headers->get('Authorization'));
 //        return $user->id;
         $data = News::select('id','content_link','description','is_featured','title','created_by','created_at as date',\DB::raw("CONCAT('".url('storage/uploads/news/')."','/',image) AS image"))->where('news.status',1)
-            ->withCount(['userFavourites'=>function($q) use ($user){
-                if (isset($user)){
-                    return $q->where('user_id',$user->id);
-
-                }
-            },'allUserfavourites'])->with(['userFavourites','allUserfavourites'])->when(!empty($time), function ($q) use ($time){
+            ->withCount(['userFavourites','allUserfavourites'])->with(['userFavourites','allUserfavourites'])->when(!empty($time), function ($q) use ($time){
 
                 if ($time=='today'){
                     $date=Carbon::now();
@@ -95,35 +82,7 @@ class NewsController extends Controller
 
         return response()->json(['data' => $data,'count'=>$data->count()], $this->successStatus);
     }
-    function getUser($bearerToken) {
-//        $tokenguard = new TokenGuard(
-//            App::make(ResourceServer::class),
-//            Auth::createUserProvider('users'),
-//            App::make(TokenRepository::class),
-//            App::make(ClientRepository::class),
-//            App::make('encrypter')
-//        );
-        $tokenguard = new TokenGuard(
-            App::make(ResourceServer::class),
-            new PassportUserProvider(Auth::createUserProvider('users'), 'users'),
-            App::make(TokenRepository::class),
-            App::make(ClientRepository::class),
-            App::make('encrypter'),
-            App::make(Request::class)
 
-        );
-        $request = Request::create('/');
-        $request->headers->set('Authorization', 'Bearer ' . $bearerToken);
-        return $tokenguard->user($request);
-    }
-
-    function authorizeUser($bearerToken) {
-        $request = request();
-        $request->headers->set('Authorization', 'Bearer ' . $bearerToken);
-        Auth::setRequest($request);
-
-        return Auth::user();
-    }
     /**
      * Show the form for creating a new resource.
      */

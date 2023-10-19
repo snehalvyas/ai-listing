@@ -37,7 +37,7 @@ class AitoolReviewController extends Controller
         if ($request->post('rating')!=''&&$request->post('rating')>0) {
             $tool = AiTools::select('id')->where('slug', $request->post('slug'))->first();
             if ($tool->myReview==null) {
-                $rating = AiToolReviews::create(['ai_tool_id' => $tool->id, 'user_id' => auth()->id(), 'star' => $request->post('rating'), 'review' => $request->post('review')]);
+                $rating = AiToolReviews::create(['ai_tool_id' => $tool->id, 'user_id' => auth()->id(), 'star' => $request->post('rating'), 'review' => trim($request->post('review'))]);
 //                if ($rating) {
                     return response()->json(['success' => true, "data" => $rating], $this->successStatus);
 //                }

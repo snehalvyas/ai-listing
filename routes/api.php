@@ -14,9 +14,11 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:api')->get('/profile', function (Request $request) {
+//    return $request->user();
+//});
+Route::get('profile', [\App\Http\Controllers\Api\ProfileController::class, 'getUserDetails'])->middleware('auth:api');
+Route::post('profile-update', [\App\Http\Controllers\Api\ProfileController::class, 'profileUpdate'])->middleware('auth:api');
 
 Route::middleware('auth:api')->post('logout', [UserController::class, 'logout']);
 Route::post('login', [UserController::class, 'login']);

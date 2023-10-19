@@ -57,13 +57,17 @@ class AiTools extends Model
         return $this->hasMany(AiToolPricingPlan::class, 'ai_tool_id', 'id');
     }
     public function favourites(){
-        return $this->hasMany(AiToolsUserFavourites::class, 'ai_tool_id', 'id')->where('user_id',auth()->id());
+        $userId=getLoginId();
+
+        return $this->hasMany(AiToolsUserFavourites::class, 'ai_tool_id', 'id')->where('user_id',$userId);
     }
     public function allUserfavourites(){
         return $this->hasMany(AiToolsUserFavourites::class, 'ai_tool_id', 'id');
     }
     public function myReview(){
-        return $this->hasOne(AiToolReviews::class, 'ai_tool_id', 'id')->where('user_id',auth()->id());
+        $userId=getLoginId();
+
+        return $this->hasOne(AiToolReviews::class, 'ai_tool_id', 'id')->where('user_id',$userId);
     }
     public function review(){
         return $this->hasMany(AiToolReviews::class, 'ai_tool_id', 'id')->orderBy('id','Desc');

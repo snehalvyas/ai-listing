@@ -25,7 +25,7 @@ class AitoolFavouriteController extends Controller
         $perPage= $request->perPage??12;
 
         $data =AiTools::select('id','tool_name','short_description','starting_price','website_url','verified','slug',\DB::raw("CONCAT('".url('storage/uploads/ai_tools/')."','/',image) AS image"))
-            ->withCount(['categories','features','review','pricingPlans','favourites','allUserfavourites'])
+            ->withCount(['categories','features','review','pricingPlans','favourites','allUserfavourites','myReview'])
             ->with('categories',function ($q) {
                 return $q->select('category_id', 'ai_tool_id')->with(['categories' => function ($q) {
                     return $q->select('id', 'category', 'icon','slug');
@@ -104,7 +104,7 @@ class AitoolFavouriteController extends Controller
                     $response= ['success' => true, 'msg' => "Removed from favourites","status"=>0];
                 }
                 $aiTool =AiTools::select('id','tool_name','short_description','starting_price','website_url','verified','slug',\DB::raw("CONCAT('".url('storage/uploads/ai_tools/')."','/',image) AS image"))
-                    ->withCount(['categories','features','review','pricingPlans','allUserfavourites'])
+                    ->withCount(['categories','features','review','pricingPlans','allUserfavourites','favourites'])
                     ->with('allUserfavourites',function($q){
                         return $q->select("id","user_id","ai_tool_id");
                     })->with('categories',function ($q) {

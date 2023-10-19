@@ -33,8 +33,9 @@ class News extends Model
        return $this->hasMany(NewsCategories::class, 'news_id', 'id');
    }
     public function userFavourites(){
-       if (auth()->check()){
-           return $this->hasMany(NewsUserFavourite::class, 'news_id', 'id')->where('user_id',auth()->id());;
+        $userId=getLoginId();
+        if ($userId){
+           return $this->hasMany(NewsUserFavourite::class, 'news_id', 'id')->where('user_id',$userId);
 
        }
         return $this->hasMany(NewsUserFavourite::class, 'news_id', 'id');

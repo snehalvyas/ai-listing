@@ -1,12 +1,76 @@
 <?php
 
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Passport\ClientRepository;
+use Laravel\Passport\Guards\TokenGuard;
+use Laravel\Passport\PassportUserProvider;
+use Laravel\Passport\TokenRepository;
+use League\OAuth2\Server\ResourceServer;
 
 /**
  * Write code on Method
  *
  * @return response()
  */
+if (! function_exists('getUser')) {
+
+    function getUser($bearerToken='')
+    {
+        if (!isset($bearerToken)) {
+            $request = app('request');
+            $bearerToken = $request->header('Authorization');
+        }
+//        $tokenguard = new TokenGuard(
+//            App::make(ResourceServer::class),
+//            Auth::createUserProvider('users'),
+//            App::make(TokenRepository::class),
+//            App::make(ClientRepository::class),
+//            App::make('encrypter')
+//        );
+        $tokenguard = new TokenGuard(
+            App::make(ResourceServer::class),
+            new PassportUserProvider(Auth::createUserProvider('users'), 'users'),
+            App::make(TokenRepository::class),
+            App::make(ClientRepository::class),
+            App::make('encrypter'),
+            App::make(Request::class)
+
+        );
+        $request = Request::create('/');
+//        $request->headers->set('Authorization', 'Bearer ' . $bearerToken);
+        return $tokenguard->user($request);
+    }
+}
+if (! function_exists('getLoginId')) {
+function getLoginId(){
+    if (auth()->check()) {
+        return auth()->id();
+    }
+    else{
+        // Access a specific header value
+            return getUser()->id??'';
+        }
+
+}
+}
+if (! function_exists('authorizeUser')) {
+
+    function authorizeUser($bearerToken='')
+    {
+        if (!isset($bearerToken)) {
+            $request = app('request');
+            $bearerToken = $request->header('Authorization');
+        }
+        $request = request();
+        $request->headers->set('Authorization', 'Bearer ' . $bearerToken);
+        Auth::setRequest($request);
+
+        return Auth::user();
+    }
+}
 if (! function_exists('convertYmdToMdy')) {
     function convertYmdToMdy($date)
     {

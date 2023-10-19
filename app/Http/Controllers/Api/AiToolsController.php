@@ -32,7 +32,7 @@ class AiToolsController extends Controller
 
 //dd($request->get('pricing'));
         $data =AiTools::select('id','tool_name','short_description','starting_price','website_url','verified','slug',\DB::raw("CONCAT('".url('storage/uploads/ai_tools/')."','/',image) AS image"))
-            ->withCount(['categories','features','review','pricingPlans','allUserfavourites'])
+            ->withCount(['categories','features','review','pricingPlans','allUserfavourites','favourites','myReview'])
             ->with('allUserfavourites',function($q){
                   return $q->select("id","user_id","ai_tool_id");
              })->with('categories',function ($q) {
@@ -191,7 +191,7 @@ class AiToolsController extends Controller
     public function show(string $slug)
     {
         $aiTool = AiTools::select('*',\DB::raw("CONCAT('".url('storage/uploads/ai_tools/')."','/',image) AS image"))->where('slug',$slug)
-            ->withCount(['categories','pricingPlans','review','features','allUserfavourites'])
+            ->withCount(['categories','pricingPlans','review','features','allUserfavourites','favourites','myReview'])
             ->with('features',function ($q){
                 return $q->select('id','ai_tool_id','feature_id')->with('featureMaster',function ($q){
                     return $q->select('id','feature','icon')->where('status',1);
