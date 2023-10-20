@@ -82,6 +82,24 @@ class ProfileController extends Controller
 //        $success['name'] =  $user->firts_name;
         return response()->json(['success'=>1], $this->successStatus);
     }
+    public function changePassword(Request $request)
+    {
+        $user=auth()->user();
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required',
+            'password' => 'required|min:8',
+            'confirm_password' => 'required|same:password',
+        ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);
+        }
+
+        $user->update(['password'=>Hash::make($request->password)]);
+//        $success['token'] =  $user->createToken('MyApp')->accessToken;
+//        $success['name'] =  $user->firts_name;
+        return response()->json(['success'=>1], $this->successStatus);
+    }
 
     /**
      * Remove the specified resource from storage.

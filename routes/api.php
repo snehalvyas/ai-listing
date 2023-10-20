@@ -19,6 +19,7 @@ use App\Http\Controllers\UserController;
 //});
 Route::get('profile', [\App\Http\Controllers\Api\ProfileController::class, 'getUserDetails'])->middleware('auth:api');
 Route::post('profile-update', [\App\Http\Controllers\Api\ProfileController::class, 'profileUpdate'])->middleware('auth:api');
+Route::post('change-password', [\App\Http\Controllers\Api\ProfileController::class, 'changePassword'])->middleware('auth:api');
 
 Route::middleware('auth:api')->post('logout', [UserController::class, 'logout']);
 Route::post('login', [UserController::class, 'login']);
